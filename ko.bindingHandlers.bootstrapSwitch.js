@@ -1,13 +1,19 @@
 ko.bindingHandlers.bootstrapSwitch = {
     init: function (element, valueAccessor, allBindingsAccessor) {
         //initialize bootstrapSwitch
-        $(element).bootstrapSwitch();
+        $(element).bootstrapSwitch();	
 
         // setting initial value
-        $(element).bootstrapSwitch('state', valueAccessor()());
+        if (valueAccessor()) {//test the accessor is initialised.
+            $(element).bootstrapSwitch('state', valueAccessor()());
+        }      
 
         //handle the field changing
-	$(element).on('switchChange.bootstrapSwitch', function (event, state) {
+        $(element).on('switchChange.bootstrapSwitch', function (event, state) {
+            if (!valueAccessor()) {//on async loads the accessor might not be initialised.
+                return;
+            }
+
             var observable = valueAccessor();
             observable(state);            
         });
